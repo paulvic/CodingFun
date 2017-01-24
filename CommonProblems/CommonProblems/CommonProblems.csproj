@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="Fibonacci.cs" />
     <Compile Include="BalancedBraces.cs" />
+    <Compile Include="Math.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace CommonProblems
 {
-    // https://en.wikipedia.org/wiki/Fibonacci_number
-
     public class Fibonacci
     {
+        // https://en.wikipedia.org/wiki/Fibonacci_number
+
         public static int GetFibonacciNumber(int n, Method method)
         {
             switch (method)
