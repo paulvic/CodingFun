@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace DataStructures.LinkedList
-{
+namespace DataStructures.BinaryTree
+{    
     /// <summary>
-    /// A node in a singly linked list
+    /// A node in a binary tree
     /// </summary>
     public class Node<T> : IComparable<T>
        where T : IComparable<T>
@@ -11,13 +11,15 @@ namespace DataStructures.LinkedList
         public T Value { get; set; }
 
         /// <summary>
-        /// The next node in the list, null if last node (tail)
+        /// The left child node
         /// </summary>
-        public Node<T> Next { get; set; }
+        public Node<T> Left { get; set; }
 
         /// <summary>
-        /// Constructs a new node with the specified value
+        /// The right child node
         /// </summary>
+        public Node<T> Right { get; set; }
+
         public Node(T value)
         {
             this.Value = value;
