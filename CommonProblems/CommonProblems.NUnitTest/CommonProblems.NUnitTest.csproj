@@ -41,7 +41,9 @@
     <Compile Include="FibonacciTest.cs" />
     <Compile Include="BalancedBracesTest.cs" />
     <Compile Include="MathTest.cs" />
+    <Compile Include="NumberPoolTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RangeOverlapTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
