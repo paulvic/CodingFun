@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryTreeTest\BinaryTreeTest.cs" />
+    <Compile Include="DependencyGraphTest\DependencyGraphTest.cs" />
     <Compile Include="LinkedListTest\LinkedListTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
