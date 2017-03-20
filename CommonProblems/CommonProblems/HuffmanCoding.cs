@@ -1,101 +1,109 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CommonProblems
 {
-    public class HuffmanNode : IComparable<HuffmanNode>
+    public class HuffmanNode
     {
-        public HuffmanNode Parent { get; set; }
         public HuffmanNode Left { get; set; }
         public HuffmanNode Right { get; set; }
         public char Character { get; set; }
-        public int Frequency { get; set; }
-
-        public int CompareTo(HuffmanNode other)
-        {
-            int returnVal = -1;
-
-            if (Frequency == other.Frequency)
-            {
-                if (Character == other.Character)
-                {
-                    return 0;
-                }
-                else if (Character < other.Character)
-                {
-                    return -1;
-                }
-                else
-                {
-                    returnVal = 1;
-                }
-            }
-            else if (Frequency < other.Frequency)
-            {
-                returnVal = -1;
-            }
-            else
-            {
-                returnVal = 1;
-            }
-
-            return returnVal;
-        }
+        public int Count { get; set; }
     }
 
     public class HuffmanTree
     {
-        private Dictionary<char, int> characters;
-        private SortedSet<HuffmanNode> nodes;
-
-        public HuffmanTree(string input)
+        public Dictionary<char, int> GetCharacterCounts(string input)
         {
-            characters = new Dictionary<char, int>();
-
+            var characterCounts = new Dictionary<char, int>();
             foreach (var character in input)
             {
-                if (!characters.ContainsKey(character))
+                if (!characterCounts.ContainsKey(character))
                 {
-                    characters.Add(character, 0);
+                    characterCounts.Add(character, 0);
                 }
 
-                characters[character]++;
+                characterCounts[character]++;
             }
 
-            nodes = new SortedSet<HuffmanNode>();
-            foreach (KeyValuePair<char, int> character in characters)
+            return characterCounts;
+        }
+
+        public HuffmanNode BuildTree(Dictionary<char, int> characterCounts)
+        {
+            var nodes = new PriorityQueue<HuffmanNode>();
+            foreach (var character in characterCounts)
             {
-                nodes.Add(new HuffmanNode() { Character = character.Key, Frequency = character.Value });
+                nodes.Enqueue(new HuffmanNode() { Character = character.Key, Count = character.Value }, character.Value);
             }
 
             while (nodes.Count > 1)
             {
-                var node1 = nodes.Min;
-                nodes.Remove(node1);
-                var node2 = nodes.Min;
-                nodes.Remove(node2);
-                var parent = new HuffmanNode() { Left = node1, Right = node2, Frequency = node1.Frequency + node2.Frequency };
-                node1.Parent = parent;
-                node2.Parent = parent;
-                nodes.Add(parent);
+                var node1 = nodes.Dequeue();
+                var node2 = nodes.Dequeue();
+                var parent = new HuffmanNode() { Left = node1, Right = node2, Count = node1.Count + node2.Count };
+                nodes.Enqueue(parent, parent.Count);
+            }
+
+            return nodes.Dequeue();
+        }
+
+        public Dictionary<char, string> CreateEncodings(HuffmanNode root)
+        {
+            var encodings = new Dictionary<char, string>();
+            Encode(root, "", encodings);
+            return encodings;
+        }
+
+        private void Encode(HuffmanNode node, string path, Dictionary<char, string> encodings)
+        {
+            if (node.Left != null)
+            {
+                Encode(node.Left, path + "0", encodings);
+                Encode(node.Right, path + "1", encodings);
+            }
+            else
+            {
+                encodings.Add(node.Character, path);
             }
         }
+    }
 
-        public Dictionary<char, int> Characters
+    public class PriorityQueue<T>
+    {
+        private SortedDictionary<int, Queue<T>> _dictionary;
+
+        public PriorityQueue()
         {
-            get { return characters; }
-            private set { characters = value; }
+            _dictionary = new SortedDictionary<int, Queue<T>>();
         }
 
+        public int Count { get; private set; }
 
-        public SortedSet<HuffmanNode> Nodes
+        public void Enqueue(T item, int priority)
         {
-            get { return nodes; }
-            private set { nodes = value; }
+            if (!_dictionary.ContainsKey(priority))
+            {
+                _dictionary.Add(priority, new Queue<T>());
+            }
+            _dictionary[priority].Enqueue(item);
+            Count++;
         }
 
+        public T Dequeue()
+        {
+            var item = _dictionary.First().Value.Dequeue();
+            if (_dictionary.First().Value.Count == 0)
+            {
+                _dictionary.Remove(_dictionary.First().Key);
+            }
+            Count--;
+            return item;
+        }
+
+        public T Peek()
+        {
+            return _dictionary.First().Value.Peek();
+        }
     }
 }
