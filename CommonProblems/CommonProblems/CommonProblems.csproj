@@ -39,6 +39,7 @@
     <Compile Include="HuffmanCoding.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="NumberPool.cs" />
+    <Compile Include="OddOccurence.cs" />
     <Compile Include="RangeOverlap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
