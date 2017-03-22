@@ -49,13 +49,15 @@ namespace CommonProblems
                 throw new ArgumentException("Array cannot contain just two elements");
             }
 
-            int oddNumber = 0;
+            int bitValue = 0;
             for (int i = 0; i < array.Length; i++)
             {
-                oddNumber = oddNumber ^ array[i];
+                // Performing XOR on a value against itself always yields zero
+                // If we encounter the same number twice, the second XOR effectively removes it
+                bitValue = bitValue ^ array[i];
             }
 
-            return oddNumber;
+            return bitValue;
         }
     }
 }

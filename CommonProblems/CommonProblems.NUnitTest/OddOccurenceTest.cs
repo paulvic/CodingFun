@@ -116,6 +116,13 @@ namespace CommonProblems.NUnit.Tests
         }
 
         [Test]
+        public void IntArrayContainingOneOddIntOccurenceNotSortedReturnsThatElement()
+        {
+            OddOccurence<int> odd = new OddOccurence<int>();
+            Assert.AreEqual(7, odd.GetIntOddOccurence(new int[] { 7, 8, 9, 8, 9 }));
+        }
+
+        [Test]
         public void IntArrayContainingTwoOddIntOccurencesReturnsWrongValue()
         {
             OddOccurence<int> odd = new OddOccurence<int>();
