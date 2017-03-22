@@ -6,41 +6,56 @@ namespace CommonProblems
 {
     public class RangeOverlap
     {
-        public static Range[] GetOverlappingRanges(Range[] ranges)
+        public static Range[] GetMergedOverlappingRanges(Range[] ranges)
         {
-            HashSet<Range> results = new HashSet<Range>(new RangeEqualityComparer());
-
-            for (int i = 0; i < ranges.Length; i++)
+            if (ranges.Length == 0)
             {
-                for (int j = i+1; j < ranges.Length; j++)
+                throw new ArgumentException("ranges array must not be empty");
+            }
+            else if (ranges.Length == 1)
+            {
+                return new Range[] { };
+            }
+            
+            Array.Sort(ranges);
+
+            Stack<Range> stack = new Stack<Range>();
+            stack.Push(ranges[0]);
+
+            var isCurrentAnOverlap = false;
+            for (int i = 1; i < ranges.Length; i++)
+            {
+                var current = stack.Peek();
+
+                if (current.End < ranges[i].Start)
                 {
-                    int s1 = ranges[i].Start;
-                    int e1 = ranges[i].End;
-                    int s2 = ranges[j].Start;
-                    int e2 = ranges[j].End;
-
-                    if ((s1 <= e2 && s1 >= s2) ||
-                        (e1 >= s2 && e1 <= e2))
+                    if (!isCurrentAnOverlap)
                     {
-                        // found overlap
-                        int start = (s1 < s2) ? s1 : s2;
-                        int end = (e1 > e2) ? e1 : e2;
-                        Range fullRange = new Range(start, end);
-
-                        // As this is a hashset the range won't be added if it's already there
-                        results.Add(fullRange);
+                        stack.Pop();
+                        isCurrentAnOverlap = false;
                     }
+                    stack.Push(ranges[i]);
+                }
+                else if (current.End < ranges[i].End)
+                {
+                    current.End = ranges[i].End;
+                    isCurrentAnOverlap = true;
                 }
             }
 
-            return results.ToArray();
+            if (!isCurrentAnOverlap)
+            {
+                stack.Pop();
+            }
+
+            return stack.Reverse().ToArray();
         }
     }
 
-    public class Range : IEquatable<Range>
+    public class Range : IEquatable<Range>, IComparable<Range>
     {
-        public int Start { get; private set; }
-        public int End { get; private set; }
+        public int Start { get; set; }
+        public int End { get; set; }
 
         public Range(int start, int end)
         {
@@ -58,19 +73,19 @@ namespace CommonProblems
             return ((this.Start == other.Start) && (this.End == other.End));
 
         }
-    }
 
-    class RangeEqualityComparer : IEqualityComparer<Range>
-    {
-        public bool Equals(Range range1, Range range2)
+        public int CompareTo(Range other)
         {
-            return range1.Equals(range2);
-        }
-
-        public int GetHashCode(Range range)
-        {
-            int hCode = range.Start ^ range.End;
-            return hCode.GetHashCode();
+            if (this.Start < other.Start)
+            {
+                return -1;
+            }
+            else if (this.Start > other.Start)
+            {
+                return 1;
+            }
+            return 0;
         }
     }
 }
+
